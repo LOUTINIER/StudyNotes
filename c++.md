@@ -1088,7 +1088,27 @@ for (auto& i : v2) {
 //replace_if(iterator beg, iterator end, _Pred, newvalue);
 ```
 
+### accumulate计算元素总和
 
+```c#
+//accumulate(iterator beg, iterator end, value)
+//value是累加初始值，因此一般为0
+```
+
+### fill填充元素
+
+```c++
+//fill(iterator beg, iterator end, value)
+```
+
+### set_intersection交集、set_union并集、set_different差集
+
+```c++
+//此三个算法使用前提为有序序列
+//set_intersection(iterator beg1, iterator end1, iterator beg2, iterator end2, iterator dest);
+//set_union(iterator beg1, iterator end1, iterator beg2, iterator end2, iterator dest);
+//set_different(iterator beg1, iterator end1, iterator beg2, iterator end2, iterator dest);
+```
 
 # 面试题
 
