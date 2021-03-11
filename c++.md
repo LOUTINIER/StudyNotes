@@ -693,33 +693,53 @@ void print(A<T> &at){
 
 # 一些函数
 
-## 容器for_each()遍历
-
-```c++
-void Func(int32_t val) {
-	std::cout << val << std::endl;
-}
-int main() {
-	std::vector<int32_t> v;
-	v.push_back(10);
-	v.push_back(33);
-	std::for_each(v.begin(), v.end(), Func);
-}
-```
-
 ## String
 
 ```c++
-assign();
-append();
-find();
-rfind();
-replace();
-compare();
-at();
-insert();
-erase();
+string();						//空串
+string(const char *);
+string(consst string& str);
+string(int n, char c);			//n个c初始化
+
+operator=(const char *s);
+operator=(const string &s);
+operator=(char c);
+assign(const char *s);
+assign(const char *s, int n);	//字符串前n个赋值当前对象
+assign(const string &s);
+assign(int n, char c);			//用n个c赋值当前对象
+
+operator+=(const char *str);
+operator+=(const char c);
+operator+=(const string &str);
+append(const char *s);
+append(const char *s, int n);	//字符串s前n个字符添加到对象
+append(const string &s);
+append(const string &s, int pos, int n);//字符串s前从pos开始的n个字符添加到对象
+
+find(const string &tr, int pos = 0);	//pos位置开始查找str第一次出现位置
+find(const char *s, int pos = 0);		//从pos位置开始查找s第一次出现位置
+find(const char *s, int pos, int n);	//从pos位置开始查找s的前n字符第一次出现位置
+find(cons char *c, int pos = 0); 		//查找c字符第一次出现位置
+rfind(const string &tr, int pos = 0);	
+rfind(const char *s, int pos = 0);		
+rfind(const char *s, int pos, int n);	
+rfind(cons char *c, int pos = 0); 
+replace(int pos, int n, cosnt string &str);//替换pos开始的n个字符为str
+replace(int pos, int n, const char *s);    //替换pos开始的n个字符为s
+
+compare(const string &s);
+compare(const char *s);
+
+operator[](int idx);
+at(int idx);
+
+insert(int pos, const char* s);
+insert(int pos, const string& str);
+insert(int pos, int n, char c);			//在pos插入n个字符c
+erase(int pos, int n = npos);			//删除从pos开始的n个字符
 substr();
+......
 ```
 
 ## Vector
@@ -740,12 +760,55 @@ reserve(int len);		//预留len容量，分配内存但不初始化，所以没�
 ## Deque
 
 ```c++
+//无capacity
+assign(iterator beg, iterator end);
+assign(int n, elem);
+empty();
+size();
+resize(int num);
+resize(int num, elem);
 
+push_back(elem);
+push_front(elem);
+pop_back(elem);
+pop_front(elem);
+insert(int pos, elem);
+insert(int pos, int n, elem);		//pos位置插入n个elem
+insert(int pos, iterator beg, elem);
+clear();							//清空容器内所有数据
+erase(iterator beg, iterator end);
+erase(int pos);
+
+at(int idx);
+operator[];
+front();
+back();
+
+sort(iterator beg, iterator end);
 ```
 
+## List
 
+```
+reverse();
+sort();
+```
 
-### swap可用于收缩内存
+## Set/MultiSet
+
+```c++
+//无resize
+insert(); //set返回pair<iterator,bool>，multiset返回iterator
+size();
+empty();
+swap(set);//交换两个集
+find(key);//查找是否存在，存在返回迭代器，不存在返回set.end()
+count(key)//统计元素个数
+```
+
+## Map/MultiMap
+
+## swap可用于收缩内存
 
 ```c++
 std::vector<int32_t> v(100000, 10);
@@ -758,7 +821,15 @@ std::vector<int32_t>(v).swap(v);//std::vector<int32_t>(v)构造以v为参数的�
 std::cout << v.capacity() << "\n";
 ```
 
+## 比较函数如何写
 
+```c++
+//就按照所给参数列表顺序，降序就是前面比后面大，那就是a>b，反之则相反
+//相当于参数顺序写好，然后看比较符号方向就行
+bool comp(T a, T b){
+    return a > b;//降序
+}
+```
 
 # STL
 
@@ -794,11 +865,208 @@ STL分为六大组件：容器、算法、迭代器、仿函数、适配器、�
 
 实现原理：开辟多片连续的内存空间，由一个中控器管理这些内存空间。
 
-<img src="C:\Users\CR\OneDrive\LifeTips\Techniques\img\c++ Deque 1.jpg" alt="image-20210311155138070" style="zoom:70%;" />
+<img src=".\img\c++ Deque 1.jpg" alt="image-20210311155138070" style="zoom:70%;" />
 
 map中存放的指针结构：
 
-<img src="C:\Users\CR\OneDrive\LifeTips\Techniques\img\c++ Deque 2.jfif" alt="image-20210311155138070" style="zoom:55%;" />
+<img src=".\img\c++ Deque 2.jfif" alt="image-20210311155138070" style="zoom:55%;" />
+
+### Stack
+
+栈，略。
+
+### Queue
+
+队列，略。
+
+### List
+
+链表，他的迭代器不支持随机访问，所以iterator无法执行自增自减以外的加减操作，且没有[]运算符。
+
+### Set/MultiSet
+
+集，元素在插入时自动排序。
+
+```c++
+//在创建时可以指定Set排序规则
+class Comp {
+public:
+	bool operator()(int a, int b) const{
+		return a > b;//由大到小排列
+	}
+};
+
+std::set<int32_t, Comp> mySet;
+```
+
+### Map/MultiMap
+
+映射，元素在插入时根据键自动排序。
+
+```c++
+//插入的四种操作
+std::map<int, std::string> m;
+m.insert(std::pair<int, std::string>(1, "str"));
+m.insert(std::make_pair(2, "ssr"));
+m.insert(std::map<int, std::string>::value_type(3, "sss"));
+m[4] = "sr";
+```
+
+
+
+## 迭代器
+
+```c++
+const_iterator;
+```
+
+## 函数对象
+
+有函数调用操作符重载成员函数的类实例。
+
+```c++
+//函数对象可以作为参数传递
+//函数对象可以有自身的状态，比如在class A中声明一个变量记录状态
+class A {
+public:
+	void operator()(){}
+};
+A a;//函数对象
+```
+
+### 谓词
+
+返回bool类型的仿函数。
+
+operator接受一个参数就叫一元谓词，接受两个参数就叫二元谓词。
+
+```c++
+class A {//一元谓词，常用于STL中的满足条件Pred需求，如find_if函数
+public:
+	bool operator()(int32_t a) const {}
+};
+```
+
+```c++
+class A {//二元谓词，常用于STL中的对比条件Pred需求，如compare函数
+public:
+	bool operator()(int32_t a, int32_t b) const {}
+};
+```
+
+### 内建函数对象
+
+系统提供了一些仿函数/函数调用重载类，在头文件functional。
+
+```c++
+#include<functional>
+negate<int> n;			//取反仿函数
+n(50);					//-50
+plus<int>n;				//加法仿函数
+plus(1, 2);				//3
+```
+
+```c++
+T plus<T>;
+T minus<T>;
+T multiplies<T>;
+T divides<T>;
+T negate<T>;
+T modulus<T>;
+```
+
+```c++
+//谓词们，可用于STL容器元素排序
+bool equal_to<T>;
+bool not_equal_to<T>;
+bool greater<T>;
+bool greater_equal<T>;
+bool less<T>;
+bool less_equal<T>;
+```
+
+```c++
+//逻辑内建函数对象
+bool logical_or<T>;
+bool logical_and<T>;
+bool logical_xor<T>;
+```
+
+## STL常用算法
+
+### 容器for_each()遍历
+
+```c++
+//for_each(iterator beg, iterator end, _func)
+void Func(int32_t val) {
+	std::cout << val << std::endl;
+}
+int main() {
+	std::vector<int32_t> v;
+	v.push_back(10);
+	v.push_back(33);
+	std::for_each(v.begin(), v.end(), Func);
+}
+```
+
+### transform实现STL元素变换
+
+```c++
+//transform(iterator beg1, iterator end1, iterator beg2, _func)
+std::vector<int> v(5, 1);
+std::vector<int>v2;
+v2.resize(v.size());
+std::transform(v.begin(), v.end(), v2.begin(), std::negate<int>());
+for (auto& i : v2) {
+	std::cout << i;
+}//-1-1-1-1-1
+```
+
+### find_if按条件查找元素
+
+```c++
+//find_if(iterator beg, iterator end, value, _Pred)
+//成功返回目标iterator，失败返回end。
+```
+
+### count_if按条件统计元素个数
+
+```c++
+//count_if(iterator beg, iterator end, value, _Pred)
+```
+
+### adjacent_find查找相邻重复的元素
+
+```c++
+//adjacent_find(iterator beg, iterator end);
+//找到后返回第一个重复元素的位置
+```
+
+### binary_search快速查找数据
+
+```c++
+//binary_search(iterator beg, iterator end, value, _Pred);
+//默认升序，需要降序的话自行定义_Pred
+```
+
+### random_shuffle打乱元素顺序
+
+```c++
+//random_shuffle(iterator beg, iterator end);
+//如果要每次都要打乱成不同的顺序，那么记得每次都要给srand设置一个不同的种子
+```
+
+### merge合并元素
+
+```
+//merge(iterator beg1, iterator end1, iterator beg2, iterator end2, iterator dest);
+//被合并的两个容器一定要是有序的
+//目标容器在merge后也是有序的
+```
+
+
+
+### reverse反转元素顺序
 
 # 面试题
 
