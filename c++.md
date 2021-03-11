@@ -1058,15 +1058,37 @@ for (auto& i : v2) {
 
 ### merge合并元素
 
-```
+```c++
 //merge(iterator beg1, iterator end1, iterator beg2, iterator end2, iterator dest);
-//被合并的两个容器一定要是有序的
+//被合并的两个容器一定要是有序的，否则运行时出错
 //目标容器在merge后也是有序的
 ```
 
-
-
 ### reverse反转元素顺序
+
+```c++
+//reverse(iterator beg, iterator end);
+```
+
+### copy拷贝元素
+
+```c++
+//copy(iterator beg, iterator end, iterator dest);
+```
+
+### replace按值置换
+
+```c++
+//replace(iterator beg, iterator end, oldvalue, newvalue);
+```
+
+### replace_if条件置换
+
+```c++
+//replace_if(iterator beg, iterator end, _Pred, newvalue);
+```
+
+
 
 # 面试题
 
